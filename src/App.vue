@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { invoke } from "@tauri-apps/api/tauri";
 
 let clear: NodeJS.Timer;
 const defaultRunMin = 1;
@@ -35,6 +36,10 @@ const timeToStr = (time: Number) => {
   return time.toString().padStart(2, "0");
 };
 
+const createWindow = async () => {
+  await invoke("create_window");
+};
+
 const start = () => {
   clear = setInterval(timer, 1000);
   isActive.value = true;
@@ -43,6 +48,7 @@ const start = () => {
 const pause = () => {
   clearInterval(clear);
   isActive.value = false;
+  createWindow();
 };
 
 const reset = () => {
@@ -52,6 +58,10 @@ const reset = () => {
   status.value = "Run";
   isActive.value = false;
 };
+
+if (status.value === "Run") {
+  start();
+}
 
 </script>
 
