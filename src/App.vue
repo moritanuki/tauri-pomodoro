@@ -3,10 +3,10 @@ import { ref } from "vue";
 import { invoke } from "@tauri-apps/api/tauri";
 
 let clear: NodeJS.Timer;
-const defaultRunMin = 1;
-const defaultRunSec = 10;
-const defaultRestMin = 0;
-const defaultRestSec = 10;
+const defaultRunMin = 25;
+const defaultRunSec = 0;
+const defaultRestMin = 5;
+const defaultRestSec = 0;
 
 const min = ref(defaultRunMin);
 const sec = ref(defaultRunSec);
@@ -68,12 +68,12 @@ if (status.value === "Run") {
 <template>
   <h3 id="timer">{{ `${timeToStr(min)}:${timeToStr(sec)}` }}</h3>
 
-  <div :class="{'status': true, 'start-color': isActive}">{{ status }}</div>
+  <div :class="{'status': true, 'active-color': isActive}">{{ status }}</div>
 
   <div class="button-wrap">
-    <button @click="start">Start</button>
-    <button @click="pause">Pause</button>
-    <button @click="reset">Reset</button>
+    <button :class="{'active-bg-color': !isActive}" :disabled="isActive" @click="start">Start</button>
+    <button :class="{'active-bg-color': isActive}" :disabled="!isActive" @click="pause">Pause</button>
+    <button class="active-bg-color" @click="reset">Reset</button>
   </div>
 </template>
 
@@ -94,8 +94,12 @@ if (status.value === "Run") {
   text-align: center;
 }
 
-.start-color {
+.active-color {
   color: #444;
+}
+
+.active-bg-color {
+  background-color: #444;
 }
 
 .button-wrap {
